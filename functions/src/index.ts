@@ -1,9 +1,8 @@
-import * as functions from "firebase-functions";
+/* eslint-disable import/prefer-default-export */
+import { onRequest } from "firebase-functions/v2/https";
+import { logger } from "firebase-functions/v2";
 
-// // Start writing functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
+export const helloworld = onRequest((request, response) => {
+  logger.info("Hello logs!", { structuredData: true });
   response.send("Hello from Firebase!");
 });
