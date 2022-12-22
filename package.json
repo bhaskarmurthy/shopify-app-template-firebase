@@ -1,0 +1,21 @@
+{
+  "name": "firebase-shopify-app",
+  "version": "1.0.0",
+  "description": "Example Shopify app using Firebase",
+  "private": true,
+  "workspaces": [
+    "functions",
+    "web"
+  ],
+  "scripts": {
+    "shopify": "shopify",
+    "build": "shopify app build",
+    "dev": "shopify app dev",
+    "info": "shopify app info",
+    "deploy": "shopify app deploy"
+  },
+  "devDependencies": {
+    "@shopify/app": "^3.29.0",
+    "@shopify/cli": "^3.29.0"
+  }
+}
