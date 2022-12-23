@@ -1,8 +1,7 @@
 {
   "functions": [
     {
-      "source": "functions",
-      "codebase": "default",
+      "source": "api",
       "ignore": [
         "node_modules",
         ".git",
@@ -10,8 +9,8 @@
         "firebase-debug.*.log"
       ],
       "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
-        "npm --prefix \"$RESOURCE_DIR\" run build"
+        "yarn --cwd \"$RESOURCE_DIR\" run lint",
+        "yarn --cwd \"$RESOURCE_DIR\" run build"
       ]
     }
   ],
@@ -20,10 +19,15 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
+        "source": "/api/**",
+        "function": "api"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
-    ]
+    ],
+    "trailingSlash": false
   },
   "emulators": {
     "functions": {

@@ -10,15 +10,18 @@ module.exports = {
     "plugin:import/warnings",
     "plugin:import/typescript",
     "airbnb-base",
+    "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended",
+    "prettier",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
+    tsconfigRootDir: __dirname,
     project: ["tsconfig.json", "tsconfig.dev.json"],
     sourceType: "module",
   },
   ignorePatterns: [
-    "/lib/**/*", // Ignore built files.
+    "/dist/**/*", // Ignore built files.
   ],
   plugins: ["@typescript-eslint", "import"],
   rules: {

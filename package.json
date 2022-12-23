@@ -4,18 +4,17 @@
   "description": "Example Shopify app using Firebase",
   "private": true,
   "workspaces": [
-    "functions",
+    "api",
     "web"
   ],
   "scripts": {
-    "shopify": "shopify",
-    "build": "shopify app build",
-    "dev": "shopify app dev",
-    "info": "shopify app info",
-    "deploy": "shopify app deploy"
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "start": "turbo run serve",
+    "deploy": "turbo run deploy",
+    "clean": "turbo run clean"
   },
   "devDependencies": {
-    "@shopify/app": "^3.29.0",
-    "@shopify/cli": "^3.29.0"
+    "turbo": "^1.6.3"
   }
 }

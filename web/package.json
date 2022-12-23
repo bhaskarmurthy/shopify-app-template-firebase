@@ -4,9 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "vite",
+    "preview": "vite preview",
+    "deploy": "firebase deploy --only hosting",
+    "clean": "rm -rf ./dist"
   },
   "dependencies": {
     "react": "^18.2.0",
