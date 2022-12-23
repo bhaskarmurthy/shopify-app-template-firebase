@@ -4,9 +4,11 @@ Example Shopify app on Firebase.
 
 ## Installation
 
+Install `asdf` (https://github.com/asdf-vm/asdf) to manage runtime versions.
 This project uses `yarn` for monrepo, and `turborepo` for build pipelines.
 
 ```sh
+asdf install
 yarn install
 ```
 
