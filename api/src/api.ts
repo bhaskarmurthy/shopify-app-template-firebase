@@ -1,20 +1,14 @@
+/* eslint-disable prefer-destructuring */
 import { onRequest } from "firebase-functions/v2/https";
-import { logger } from "firebase-functions/v2";
-import express from "express";
-import morgan from "morgan";
+import type { Express } from "express";
+import getApp from "./shopify/app";
 
-const app = express();
-app.use(
-  morgan("combined", {
-    stream: {
-      write: logger.log,
-    },
-  })
-);
+let app: Express;
 
-app.get("*", (req, res) => {
-  const date = new Date();
-  res.status(200).send(`[${date.toISOString()}] hello world`);
+export default onRequest((req, res) => {
+  if (!app) {
+    app = getApp();
+  }
+
+  return app(req, res);
 });
-
-export default onRequest(app);
