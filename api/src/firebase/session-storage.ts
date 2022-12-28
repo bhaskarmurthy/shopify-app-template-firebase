@@ -1,10 +1,9 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
 import { Firestore, FirestoreDataConverter } from "firebase-admin/firestore";
 import { logger } from "firebase-functions/v2";
 import { SessionStorage } from "@shopify/shopify-app-session-storage";
 import { Session, SessionParams } from "@shopify/shopify-api";
-
-console.log("FIRESTORE_EMULATOR_HOST", process.env.FIRESTORE_EMULATOR_HOST);
 
 const sessionStorageConverter: FirestoreDataConverter<SessionParams> = {
   toFirestore(
