@@ -31,6 +31,10 @@
         "function": "webhooks"
       },
       {
+        "source": "/api/**",
+        "function": "api"
+      },
+      {
         "source": "**",
         "function": "app"
       }
