@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && mv dist/index.html ../api/dist",
     "dev": "vite",
     "preview": "vite preview",
     "deploy": "firebase deploy --only hosting",
@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.6.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

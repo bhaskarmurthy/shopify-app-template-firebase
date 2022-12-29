@@ -24,7 +24,7 @@
       },
       {
         "source": "**",
-        "destination": "/index.html"
+        "function": "app"
       }
     ],
     "trailingSlash": false
