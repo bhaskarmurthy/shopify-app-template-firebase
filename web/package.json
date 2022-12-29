@@ -4,15 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build && mv dist/index.html ../api/dist",
+    "build": "tsc && vite build && mv dist/index.html ../api/dist/index.html",
     "dev": "vite",
     "preview": "vite preview",
     "deploy": "firebase deploy --only hosting",
     "clean": "rm -rf ./dist"
   },
   "dependencies": {
+    "@shopify/app-bridge": "^3.5.0",
+    "@shopify/app-bridge-react": "^3.5.0",
+    "@shopify/app-bridge-utils": "^3.5.0",
+    "@shopify/polaris": "^10.16.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-query": "^3.39.2",
     "react-router-dom": "^6.6.1"
   },
   "devDependencies": {

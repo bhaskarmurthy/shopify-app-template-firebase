@@ -6,7 +6,7 @@ const app = express();
 
 // setup logger
 app.use(
-  morgan("combined", {
+  morgan("tiny", {
     stream: {
       write: logger.log,
     },

@@ -1,5 +1,6 @@
 import { GraphqlQueryError, Session } from "@shopify/shopify-api";
 import type { ShopifyApp } from "@shopify/shopify-app-express";
+import getShopifyApp from ".";
 
 const ADJECTIVES = [
   "autumn",
@@ -95,6 +96,7 @@ export default async function productCreator(
   session: Session,
   count = DEFAULT_PRODUCTS_COUNT
 ) {
+  const shopify = getShopifyApp();
   const client = new shopify.api.clients.Graphql({ session });
 
   try {
