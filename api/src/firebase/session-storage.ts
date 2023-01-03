@@ -80,14 +80,49 @@ export class FirestoreSessionStorage implements SessionStorage {
   }
 
   deleteSession(id: string): Promise<boolean> {
-    throw new Error("Method not implemented.");
+    return this.sessionsCollection
+      .doc(id)
+      .delete()
+      .then((result) => {
+        logger.info(`Deleted session with id ${id}`);
+        return true;
+      })
+      .catch((error) => {
+        logger.error(`Error deleting session with id ${id}`, error);
+        return false;
+      });
   }
 
   deleteSessions(ids: string[]): Promise<boolean> {
-    throw new Error("Method not implemented.");
+    return Promise.allSettled(
+      ids.map((id) => this.sessionsCollection.doc(id).delete())
+    )
+      .then((results) => {
+        results.forEach((result, index) => {
+          if (result.status === "fulfilled") {
+            logger.info(`Deleted session with id ${ids[index]}`);
+          }
+        });
+
+        return true;
+      })
+      .catch((error) => {
+        logger.error(
+          `Error deleting sessions with ids ${ids.toString()}`,
+          error
+        );
+        return false;
+      });
   }
 
   findSessionsByShop(shop: string): Promise<Session[]> {
-    throw new Error("Method not implemented.");
+    return this.sessionsCollection
+      .where("shop", "==", shop)
+      .get()
+      .then((snap) => snap.docs.map((doc) => new Session(doc.data())))
+      .catch((error) => {
+        logger.error(`Error getting session for shop ${shop}`, error);
+        return [];
+      });
   }
 }
