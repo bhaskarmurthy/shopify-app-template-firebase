@@ -5,38 +5,39 @@ import { logger } from "firebase-functions/v2";
 import { SessionStorage } from "@shopify/shopify-app-session-storage";
 import { Session, SessionParams } from "@shopify/shopify-api";
 
-const sessionStorageConverter: FirestoreDataConverter<SessionParams> = {
-  toFirestore(
-    session: FirebaseFirestore.WithFieldValue<SessionParams>
-  ): FirebaseFirestore.DocumentData {
-    return {
-      id: session.id,
-      shop: session.shop,
-      state: session.state,
-      isOnline: session.isOnline,
-      accessToken: session.accessToken,
-      expires: session.expires,
-      scope: session.scope,
-    };
-  },
-  fromFirestore(
-    snapshot: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
-  ): SessionParams {
-    const data = snapshot.data();
-    return {
-      id: snapshot.id,
-      shop: data.shop,
-      state: data.state,
-      isOnline: data.isOnline,
-      accessToken: data.accessToken,
-      expires: data.expires,
-      scope: data.scope,
-    };
-  },
-};
+type SessionParamsWithoutId = Omit<SessionParams, "id">;
+
+const sessionStorageConverter: FirestoreDataConverter<SessionParamsWithoutId> =
+  {
+    toFirestore(
+      session: FirebaseFirestore.WithFieldValue<SessionParamsWithoutId>
+    ): FirebaseFirestore.DocumentData {
+      return {
+        shop: session.shop,
+        state: session.state,
+        isOnline: session.isOnline,
+        accessToken: session.accessToken,
+        expires: session.expires,
+        scope: session.scope,
+      };
+    },
+    fromFirestore(
+      snapshot: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
+    ): SessionParamsWithoutId {
+      const data = snapshot.data();
+      return {
+        shop: data.shop,
+        state: data.state,
+        isOnline: data.isOnline,
+        accessToken: data.accessToken,
+        expires: data.expires,
+        scope: data.scope,
+      };
+    },
+  };
 
 export class FirestoreSessionStorage implements SessionStorage {
-  sessionsCollection: FirebaseFirestore.CollectionReference<SessionParams>;
+  sessionsCollection: FirebaseFirestore.CollectionReference<SessionParamsWithoutId>;
 
   constructor(db: Firestore) {
     this.sessionsCollection = db
@@ -45,10 +46,14 @@ export class FirestoreSessionStorage implements SessionStorage {
   }
 
   storeSession(session: Session): Promise<boolean> {
+    const { id, ...sessionParams } = session.toObject();
+
+    logger.info(`Store session with id ${id}`);
     return this.sessionsCollection
-      .add(session.toObject())
+      .doc(id)
+      .set(sessionParams)
       .then((result) => {
-        logger.info(`Saved session with id ${result.id}`);
+        logger.info(`Saved session with id ${id} at ${result.writeTime}`);
         return true;
       })
       .catch((error) => {
@@ -66,7 +71,7 @@ export class FirestoreSessionStorage implements SessionStorage {
 
         if (data !== undefined) {
           logger.info(`Loaded session with id ${id}`);
-          return new Session(data);
+          return new Session({ id, ...data });
         }
 
         // no document found
@@ -84,7 +89,7 @@ export class FirestoreSessionStorage implements SessionStorage {
       .doc(id)
       .delete()
       .then((result) => {
-        logger.info(`Deleted session with id ${id}`);
+        logger.info(`Deleted session with id ${id} at ${result.writeTime}`);
         return true;
       })
       .catch((error) => {
@@ -116,10 +121,13 @@ export class FirestoreSessionStorage implements SessionStorage {
   }
 
   findSessionsByShop(shop: string): Promise<Session[]> {
+    logger.info(`Finding session for shop ${shop}`);
     return this.sessionsCollection
       .where("shop", "==", shop)
       .get()
-      .then((snap) => snap.docs.map((doc) => new Session(doc.data())))
+      .then((snap) =>
+        snap.docs.map((doc) => new Session({ id: doc.id, ...doc.data() }))
+      )
       .catch((error) => {
         logger.error(`Error getting session for shop ${shop}`, error);
         return [];
